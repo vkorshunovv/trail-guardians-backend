@@ -18,12 +18,17 @@ export const signUp = async (res: Response, req: Request) => {
       password: hashedPassword,
     });
 
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      throw new Error("Missing JWT_SECRET environment variable");
+    }
+
     const token = jwt.sign(
       { id: newUser.id, email: newUser.email },
-      process.env.JWT_SECRET,
+      jwtSecret,
       { expiresIn: "1h" }
     );
-    res
+    return res
       .status(201)
       .json({ token, user: { id: newUser.id, email: newUser.email } });
   } catch (error) {
@@ -36,12 +41,27 @@ export const logIn = async (res: Response, req: Request) => {
 
   try {
     const user = await User.findOne({ where: { email } });
-    if (user && (await bcrypt.compare(password, user.password))) {
-      res.status(201).json(user);
-    } else {
-      res.status(500).json({ message: "Invalid credentials" });
+    if (!user) {
+      res.status(400).json({ message: "Invalid credentials" });
     }
+
+    const isPasswordCorrect = await bcrypt.compare(password, user!.password);
+    if (!isPasswordCorrect) {
+      res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      throw new Error("Missing JWT_SECRET environment variable");
+    }
+
+    const token = jwt.sign({ id: user?.id, email: user?.email }, jwtSecret, {
+      expiresIn: "1h",
+    });
+    return res
+      .status(201)
+      .json({ token, user: { id: user?.id, email: user?.email } });
   } catch (error) {
-    res.status(401).json({ error: (error as Error).message });
+    res.status(500).json({ error: (error as Error).message });
   }
 };
