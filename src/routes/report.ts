@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { authMiddleware } from "../middleware/authMiddleware";
 import { createReport, getReports } from "../controllers/reportController";
 import multer from "multer";
 
@@ -13,10 +12,10 @@ const storage = multer.diskStorage({
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
-``;
+
 const upload = multer({ storage });
 
-router.post("/",  upload.single("image"), createReport);
+router.post("/", upload.single("image"), createReport);
 router.get("/", getReports);
 
 export default router;
