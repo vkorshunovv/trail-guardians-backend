@@ -14,9 +14,17 @@ app.use(
   })
 );
 
+app.use('/test', (req, res) => {
+  res.send('Server is running almost');
+});
+
+
 app.use(express.json());
 app.use("/api/auth", authRoutes);
-app.use("/api", reportRoutes);
+app.use("/api/report", (req, res, next) => {
+  console.log(`Request URL: ${req.url}`); // Debug log
+  next();
+}, reportRoutes);
 
 sequelize.sync({ force: false }).then(() => {
   console.log("Database synced");

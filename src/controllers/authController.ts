@@ -7,6 +7,7 @@ export const signUp = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
 
   try {
+    console.log('Received signup request');
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       res.status(400).json("User already exist");
@@ -28,11 +29,12 @@ export const signUp = async (req: Request, res: Response) => {
       jwtSecret,
       { expiresIn: "1h" }
     );
+    console.log('User created successfully');
     return res
       .status(201)
       .json({ token, user: { id: newUser.id, email: newUser.email } });
   } catch (error) {
-    console.error("Error during signup:", error);
+    console.error("Error during signup:", (error as Error).message);
     res.status(500).json({ error: (error as Error).message });
   }
 };
