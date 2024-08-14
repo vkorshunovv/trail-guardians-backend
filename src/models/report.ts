@@ -1,7 +1,12 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
 
-class Report extends Model {}
+class Report extends Model {
+  public id!: number;
+  public description!: string;
+  public coordinates!: string;
+  public image!: string;
+}
 
 Report.init(
   {
@@ -15,6 +20,7 @@ Report.init(
     },
     image: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
   },
   {
