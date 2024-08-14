@@ -3,6 +3,7 @@ import sequelize from "./config/database";
 import authRoutes from "./routes/auth";
 import cors from "cors";
 import reportRoutes from "../src/routes/report";
+import path from 'path';
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use('/test', (req, res) => {
   res.send('Server is running almost');
 });
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(express.json());
 app.use("/api/auth", authRoutes);
