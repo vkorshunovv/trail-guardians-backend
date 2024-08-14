@@ -17,3 +17,12 @@ export const createEvent = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error occurred while creating Event" });
   }
 };
+
+export const getEvents = async (req: Request, res: Response) => {
+  try {
+    const events = await Event.findAll();
+    res.status(200).json(events);
+  } catch (error) {
+    res.status(500).json({ message: "Error occurred while getting Events" });
+  }
+};
