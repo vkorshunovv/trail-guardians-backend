@@ -26,3 +26,29 @@ export const getEvents = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error occurred while getting Events" });
   }
 };
+
+export const updateEvent = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { title, description, date, coordinates, volunteersNeeded } = req.body;
+  try {
+    const event = await Event.findByPk(id);
+
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    await event.update({
+      title,
+      description,
+      date,
+      coordinates,
+      volunteersNeeded,
+    });
+
+    res.status(200).json(event);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: `Error occured while updating Event with id: ${id}` });
+  }
+};
