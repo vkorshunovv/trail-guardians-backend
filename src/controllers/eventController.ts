@@ -52,3 +52,20 @@ export const updateEvent = async (req: Request, res: Response) => {
       .json({ message: `Error occured while updating Event with id: ${id}` });
   }
 };
+
+export const deleteEvent = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const event = await Event.findByPk(id);
+  if (!event) {
+    return res.status(404).json({ message: "Event not found" });
+  }
+  try {
+    await event.destroy();
+    res.status(204).end();
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: `Error occurred while deleting Event with id: ${id}` });
+  }
+};
