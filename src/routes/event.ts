@@ -4,6 +4,7 @@ import {
   getEvents,
   updateEvent,
   deleteEvent,
+  joinEvent,
 } from "../controllers/eventController";
 
 const router = Router();
@@ -12,5 +13,6 @@ router.post("/", createEvent);
 router.get("/", getEvents);
 router.put("/:id", updateEvent);
 router.delete("/:id", deleteEvent);
+router.put("/:id/join", joinEvent);
 
 export default router;

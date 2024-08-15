@@ -69,3 +69,20 @@ export const deleteEvent = async (req: Request, res: Response) => {
       .json({ message: `Error occurred while deleting Event with id: ${id}` });
   }
 };
+
+export const joinEvent = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const event = await Event.findByPk(id);
+
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    event.volunteersSignedUp += 1;
+    await event.save();
+    res.status(200).json(event);
+  } catch (error) {
+    res.status(500).json({ message: "Error occurred while joining event" });
+  }
+};

@@ -8,6 +8,7 @@ class Event extends Model {
   public date!: Date;
   public coordinates!: string;
   public volunteersNeeded!: number;
+  public volunteersSignedUp!: number;
 }
 
 Event.init(
