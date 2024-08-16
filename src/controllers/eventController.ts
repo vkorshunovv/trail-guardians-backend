@@ -2,18 +2,21 @@ import { Request, Response } from "express";
 import Event from "../models/event";
 
 export const createEvent = async (req: Request, res: Response) => {
-  const { title, description, date, coordinates, volunteersNeeded } = req.body;
+  console.log("Create Event Route Hit");
+
+  const { title, description, date, location, volunteersNeeded } = req.body;
 
   try {
     const newEvent = await Event.create({
       title,
       description,
       date,
-      coordinates,
+      location,
       volunteersNeeded,
     });
     res.status(201).json(newEvent);
   } catch (error) {
+    console.error("Error creating event:", error);
     res.status(500).json({ message: "Error occurred while creating Event" });
   }
 };
@@ -29,7 +32,7 @@ export const getEvents = async (req: Request, res: Response) => {
 
 export const updateEvent = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { title, description, date, coordinates, volunteersNeeded } = req.body;
+  const { title, description, date, location, volunteersNeeded } = req.body;
   try {
     const event = await Event.findByPk(id);
 
@@ -41,7 +44,7 @@ export const updateEvent = async (req: Request, res: Response) => {
       title,
       description,
       date,
-      coordinates,
+      location,
       volunteersNeeded,
     });
 
@@ -79,7 +82,7 @@ export const joinEvent = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Event not found" });
     }
 
-    event.volunteersSignedUp += 1;
+    event.volunteersSignedUp && (event.volunteersSignedUp += 1);
     await event.save();
     res.status(200).json(event);
   } catch (error) {

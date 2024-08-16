@@ -6,9 +6,9 @@ class Event extends Model {
   public title!: string;
   public description!: string;
   public date!: Date;
-  public coordinates!: string;
+  public location!: string;
   public volunteersNeeded!: number;
-  public volunteersSignedUp!: number;
+  public volunteersSignedUp?: number;
 }
 
 Event.init(
@@ -25,7 +25,7 @@ Event.init(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    coordinates: {
+    location: {
       type: DataTypes.STRING,
       allowNull: false,
     },
