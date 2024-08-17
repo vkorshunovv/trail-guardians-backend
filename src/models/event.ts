@@ -37,6 +37,14 @@ Event.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    trashCollected: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    hoursVolunteered: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
   },
   {
     sequelize,
