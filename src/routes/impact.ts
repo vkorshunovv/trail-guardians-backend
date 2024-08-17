@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getImpact } from "../controllers/impactController.ts";
+import { getImpact } from "../controllers/impactController";
 
 const router = Router();
 
