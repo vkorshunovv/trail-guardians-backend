@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import Event from "../models/event";
+import User from "../models/user";
+import UserEvent from "../models/userEvent";
 
 export const createEvent = async (req: Request, res: Response) => {
   console.log("Create Event Route Hit");
@@ -74,18 +76,21 @@ export const deleteEvent = async (req: Request, res: Response) => {
 };
 
 export const joinEvent = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  try {
-    const event = await Event.findByPk(id);
+  const { userId, eventId } = req.body;
 
-    if (!event) {
-      return res.status(404).json({ message: "Event not found" });
+  try {
+    const user = User.findByPk(userId);
+    const event = Event.findByPk(eventId);
+
+    if (!user || !event) {
+      return res.status(404).json({ message: "User or Event were not found" });
     }
 
-    event.volunteersSignedUp && (event.volunteersSignedUp += 1);
-    await event.save();
-    res.status(200).json(event);
+    await UserEvent.create({ userId, eventId });
+
+    return res.status(200).json({ message: "Successfully joined event" });
   } catch (error) {
-    res.status(500).json({ message: "Error occurred while joining event" });
+    console.error("Error joining event:", error);
+    res.status(500).json({ error: (error as Error).message });
   }
 };

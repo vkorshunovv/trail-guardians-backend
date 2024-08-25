@@ -13,6 +13,6 @@ router.post("/", createEvent);
 router.get("/", getEvents);
 router.put("/:id", updateEvent);
 router.delete("/:id", deleteEvent);
-router.put("/:id/join", joinEvent);
+router.post("/join", joinEvent);
 
 export default router;

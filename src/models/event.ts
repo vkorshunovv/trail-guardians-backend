@@ -9,6 +9,8 @@ class Event extends Model {
   public location!: string;
   public volunteersNeeded!: number;
   public volunteersSignedUp?: number;
+  public trashCollected?: number;
+  public hoursVolunteered?: number;
 }
 
 Event.init(
@@ -39,11 +41,11 @@ Event.init(
     },
     trashCollected: {
       type: DataTypes.INTEGER,
-      defaultValue: 0,
+      defaultValue: 11,
     },
     hoursVolunteered: {
       type: DataTypes.INTEGER,
-      defaultValue: 0,
+      defaultValue: 7,
     },
   },
   {
