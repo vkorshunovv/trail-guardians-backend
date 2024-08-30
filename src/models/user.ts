@@ -6,6 +6,7 @@ class User extends Model {
   public name!: string;
   public email!: string;
   public password!: string;
+  public joinedEvents?: number[];
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -29,6 +30,10 @@ User.init(
     password: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    joinedEvents: {
+      type: DataTypes.JSON,
+      defaultValue: [],
     },
   },
   {

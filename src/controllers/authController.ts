@@ -17,6 +17,7 @@ export const signUp = async (req: Request, res: Response) => {
       name,
       email,
       password: hashedPassword,
+      joinedEvents: [],
     });
 
     const jwtSecret = process.env.JWT_SECRET;
@@ -30,9 +31,15 @@ export const signUp = async (req: Request, res: Response) => {
       { expiresIn: "1h" }
     );
     console.log("User created successfully");
-    return res
-      .status(201)
-      .json({ token, user: { id: newUser.id, email: newUser.email } });
+    return res.status(201).json({
+      token,
+      user: {
+        id: newUser.id,
+        email: newUser.email,
+        name: newUser.name,
+        joinedEvent: newUser.joinedEvents,
+      },
+    });
   } catch (error) {
     console.error("Error during signup:", (error as Error).message);
     res.status(500).json({ error: (error as Error).message });
@@ -63,7 +70,12 @@ export const logIn = async (req: Request, res: Response) => {
     });
     return res.status(201).json({
       token,
-      user: { id: user?.id, email: user?.email, name: user?.name },
+      user: {
+        id: user!.id,
+        email: user!.email,
+        name: user!.name,
+        joinedEvents: user!.joinedEvents,
+      },
     });
   } catch (error) {
     console.error("Error during login:", error);
