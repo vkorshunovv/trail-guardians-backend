@@ -10,7 +10,7 @@ export const signUp = async (req: Request, res: Response) => {
     console.log("Received signup request");
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      res.status(400).json("User already exist");
+      return res.status(400).json("User already exist");
     }
     const hashedPassword = await bcrypt.hash(password, 12);
     const newUser = await User.create({
@@ -52,12 +52,12 @@ export const logIn = async (req: Request, res: Response) => {
   try {
     const user = await User.findOne({ where: { email } });
     if (!user) {
-      res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, user!.password);
     if (!isPasswordCorrect) {
-      res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     const jwtSecret = process.env.JWT_SECRET;
@@ -68,7 +68,7 @@ export const logIn = async (req: Request, res: Response) => {
     const token = jwt.sign({ id: user?.id, email: user?.email }, jwtSecret, {
       expiresIn: "1h",
     });
-    return res.status(201).json({
+    return res.status(200).json({
       token,
       user: {
         id: user!.id,

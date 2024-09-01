@@ -16,8 +16,8 @@ app.use(
     credentials: true,
   })
 );
-
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+const uploadsPath = path.resolve(__dirname, '../uploads');
+app.use("/uploads", express.static(uploadsPath)); 
 
 app.use(express.json());
 app.use("/api/auth", authRoutes);

@@ -4,7 +4,6 @@ import sequelize from "../config/database";
 class Event extends Model {
   public id!: number;
   public title!: string;
-  public description!: string;
   public date!: Date;
   public location!: string;
   public volunteersNeeded!: number;
@@ -15,12 +14,13 @@ class Event extends Model {
 
 Event.init(
   {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     title: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.TEXT,
       allowNull: false,
     },
     date: {
