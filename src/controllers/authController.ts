@@ -7,16 +7,17 @@ export const signUp = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
 
   try {
-    console.log('Received signup request');
+    console.log("Received signup request");
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      res.status(400).json("User already exist");
+      return res.status(400).json("User already exist");
     }
     const hashedPassword = await bcrypt.hash(password, 12);
     const newUser = await User.create({
       name,
       email,
       password: hashedPassword,
+      joinedEvents: [],
     });
 
     const jwtSecret = process.env.JWT_SECRET;
@@ -29,10 +30,16 @@ export const signUp = async (req: Request, res: Response) => {
       jwtSecret,
       { expiresIn: "1h" }
     );
-    console.log('User created successfully');
-    return res
-      .status(201)
-      .json({ token, user: { id: newUser.id, email: newUser.email } });
+    console.log("User created successfully");
+    return res.status(201).json({
+      token,
+      user: {
+        id: newUser.id,
+        email: newUser.email,
+        name: newUser.name,
+        joinedEvent: newUser.joinedEvents,
+      },
+    });
   } catch (error) {
     console.error("Error during signup:", (error as Error).message);
     res.status(500).json({ error: (error as Error).message });
@@ -45,12 +52,12 @@ export const logIn = async (req: Request, res: Response) => {
   try {
     const user = await User.findOne({ where: { email } });
     if (!user) {
-      res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, user!.password);
     if (!isPasswordCorrect) {
-      res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     const jwtSecret = process.env.JWT_SECRET;
@@ -61,9 +68,15 @@ export const logIn = async (req: Request, res: Response) => {
     const token = jwt.sign({ id: user?.id, email: user?.email }, jwtSecret, {
       expiresIn: "1h",
     });
-    return res
-      .status(201)
-      .json({ token, user: { id: user?.id, email: user?.email } });
+    return res.status(200).json({
+      token,
+      user: {
+        id: user!.id,
+        email: user!.email,
+        name: user!.name,
+        joinedEvents: user!.joinedEvents,
+      },
+    });
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).json({ error: (error as Error).message });

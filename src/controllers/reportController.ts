@@ -2,12 +2,15 @@ import { Request, Response } from "express";
 import Report from "../models/report";
 
 export const createReport = async (req: Request, res: Response) => {
-    console.log("Create Report Route Hit");
   const { description, coordinates } = req.body;
-  const image = req.file?.path;
+  const imagePath = req.file ? `uploads/${req.file.filename}` : null;
+
+  if (!imagePath) {
+    return res.status(400).json({ message: "No image uploaded." });
+  }
 
   try {
-    const newReport = await Report.create({ description, coordinates, image });
+    const newReport = await Report.create({ description, coordinates, image: imagePath });
     res.status(201).json(newReport);
   } catch (error) {
     console.error("Error creating report:", error);
@@ -16,7 +19,6 @@ export const createReport = async (req: Request, res: Response) => {
 };
 
 export const getReports = async (req: Request, res: Response) => {
-  console.log("Get Reports Route Hit");
   try {
     const reports = await Report.findAll();
     res.status(200).json(reports);

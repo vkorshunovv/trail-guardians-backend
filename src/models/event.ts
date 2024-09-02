@@ -4,21 +4,23 @@ import sequelize from "../config/database";
 class Event extends Model {
   public id!: number;
   public title!: string;
-  public description!: string;
   public date!: Date;
   public location!: string;
   public volunteersNeeded!: number;
   public volunteersSignedUp?: number;
+  public trashCollected?: number;
+  public hoursVolunteered?: number;
 }
 
 Event.init(
   {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     title: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.TEXT,
       allowNull: false,
     },
     date: {
@@ -36,6 +38,14 @@ Event.init(
     volunteersSignedUp: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
+    },
+    trashCollected: {
+      type: DataTypes.INTEGER,
+      defaultValue: 11,
+    },
+    hoursVolunteered: {
+      type: DataTypes.INTEGER,
+      defaultValue: 7,
     },
   },
   {
