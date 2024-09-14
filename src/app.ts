@@ -11,13 +11,16 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "http://trail-guardians-bucket.s3-website.eu-north-1.amazonaws.com",
+    ],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
 );
-const uploadsPath = path.resolve(__dirname, '../uploads');
-app.use("/uploads", express.static(uploadsPath)); 
+const uploadsPath = path.resolve(__dirname, "../uploads");
+app.use("/uploads", express.static(uploadsPath));
 
 app.use(express.json());
 app.use("/api/auth", authRoutes);

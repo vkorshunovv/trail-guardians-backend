@@ -8,6 +8,9 @@ const sequelize = new Sequelize(process.env.DATABASE_URL as string, {
   logging: console.log,
 });
 
+console.log('Database URL: ', process.env.DATABASE_URL);
+
+
 sequelize.authenticate()
   .then(() => console.log("Database connection established successfully."))
   .catch(error => console.error("Unable to connect to the database:", error));
